@@ -39,8 +39,8 @@ namespace MesurePotentiomètre
             fichierDepose = files[0];
             this.label1.Text = "Le fichier déposé est " + fichierDepose;
             nbValeurs = File.ReadLines(fichierDepose).Count();
-            delay = Convert.ToInt32(numericUpDown1.Value);
-            nbMesuresParSecondes = 1000 / delay;
+            /*delay = Convert.ToInt32(numericUpDown1.Value);
+            nbMesuresParSecondes = 1000 / delay;*/
 
             //Définition du format et du style du graphique
 
@@ -51,7 +51,8 @@ namespace MesurePotentiomètre
             chart1.Series["Mesures"].Color = Color.Blue;
             chart1.ChartAreas[0].AxisX.Title = "Temps de mesure";
             chart1.ChartAreas[0].AxisY.Title = "Valeur de la mesure";
-            chart1.ChartAreas[0].AxisX.Interval = nbValeurs / nbMesuresParSecondes;
+            chart1.ChartAreas[0].AxisX.Interval = nbValeurs / 20;
+
 
             xValues.Clear();
             yValues.Clear();
@@ -61,15 +62,17 @@ namespace MesurePotentiomètre
             StreamReader monStreamReader = new StreamReader(fichierDepose, encoding);
 
             //On lit les données du fichier et on les ajoute à la liste des données qui sera affichée par le graphique
-            int col = 0;
-            for (int i = 0; i < nbValeurs; i++)
+            int col = 1;
+            string ligne = monStreamReader.ReadLine();
+            while (ligne != null)
             {
-                string ligne = monStreamReader.ReadLine();
                 int value = int.Parse(ligne);
-                double temps = col * nbMesuresParSecondes;
+                double temps = col * 20;
                 xValues.Add(temps);
                 yValues.Add(value);
+                ligne = monStreamReader.ReadLine();
                 col++;
+                MessageBox.Show("Tests");
             }
 
             monStreamReader.Close();
@@ -93,6 +96,11 @@ namespace MesurePotentiomètre
             }
 
             return sb.ToString();
+        }
+
+        private void Form1_Load(object sender, EventArgs e)
+        {
+            chart1.Series["Mesures"].Points.DataBindXY(xValues, yValues);
         }
     }
 }

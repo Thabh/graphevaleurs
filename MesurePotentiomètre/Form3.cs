@@ -22,7 +22,7 @@ namespace MesurePotentiomètre
         int enrValeurs;
         double nbValeurs;
         SerialPort COM;
-        int delay = 200; //Ici vous pouvez recopier la valeur de délai que vous avez introduit dans votre code Arduino
+        int delay = 500; //Ici vous pouvez recopier la valeur de délai que vous avez introduit dans votre code Arduino
         double nbMesuresParSecondes; //Cette variable nous permet de garder une trace de l'instant auquel la mesure a été faite
 
         public Form3()
@@ -63,7 +63,6 @@ namespace MesurePotentiomètre
                     {
                         monStreamWriter.WriteLine(oneLine);
                     }
-                    MessageBox.Show("Valeur enregistrée");
                     enrValeurs++;
                 }
 
@@ -87,7 +86,7 @@ namespace MesurePotentiomètre
             chart1.Series["Mesures"].Color = Color.Blue;
             chart1.ChartAreas[0].AxisX.Title = "Temps de mesure";
             chart1.ChartAreas[0].AxisY.Title = "Valeur de la mesure";
-            chart1.ChartAreas[0].AxisX.Interval = nbValeurs / nbMesuresParSecondes;
+            chart1.ChartAreas[0].AxisX.Interval = nbValeurs / Convert.ToInt32(numericUpDown1.Value);
 
             xValues.Clear();
             yValues.Clear();
@@ -132,7 +131,11 @@ namespace MesurePotentiomètre
 
         private void button1_Click(object sender, EventArgs e)
         {
-            string nomFichier = "Desktop\\" + DateTime.Now.ToString("dd_MM_yy") + "_" + DateTime.Now.ToString("hh_mm_ss") + ".txt";
+            if (!System.IO.Directory.Exists("C:\\Sauvegardes"))
+            {
+                System.IO.Directory.CreateDirectory("C:\\Sauvegardes");
+            }
+            string nomFichier = "C:\\Sauvegardes\\" + DateTime.Now.ToString("dd_MM_yy") + "_" + DateTime.Now.ToString("hh_mm_ss") + ".txt";
             StreamWriter monStreamWriter = File.CreateText(nomFichier);
             System.Text.Encoding encoding = System.Text.Encoding.GetEncoding("iso-8859-1");
             StreamReader monStreamReader = new StreamReader(fichierValeurs, encoding);
@@ -146,6 +149,12 @@ namespace MesurePotentiomètre
                     monStreamWriter.WriteLine(oneLine);
                 }
             }
+            MessageBox.Show("Série sauvegardée");
+        }
+
+        private void Form3_Load(object sender, EventArgs e)
+        {
+            chart1.Series["Mesures"].Points.DataBindXY(xValues, yValues);
         }
     }
 }
