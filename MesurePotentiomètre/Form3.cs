@@ -6,6 +6,7 @@ using System.Drawing;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Threading;
 using System.Windows.Forms;
 using System.Windows.Forms.DataVisualization.Charting;
 using System.IO;
@@ -64,6 +65,7 @@ namespace MesurePotentiomètre
                         monStreamWriter.WriteLine(oneLine);
                     }
                     enrValeurs++;
+                    Thread.Sleep(delay);
                 }
 
                 // Fermeture du StreamWriter et du port USB (attention très important) 
@@ -97,9 +99,10 @@ namespace MesurePotentiomètre
 
             //On lit les données du fichier et on les ajoute à la liste des données qui sera affichée par le graphique
             int col = 0;
-            for (int i = 0; i < enrValeurs; i++)
+            string ligne = monStreamReader.ReadLine();
+            for (int i = 1; i < enrValeurs; i++)
             {
-                string ligne = monStreamReader.ReadLine();
+                ligne = monStreamReader.ReadLine();
                 int value = int.Parse(ligne);
                 double temps = col * delay;
                 xValues.Add(temps);
@@ -149,6 +152,8 @@ namespace MesurePotentiomètre
                     monStreamWriter.WriteLine(oneLine);
                 }
             }
+            monStreamReader.Close();
+            monStreamWriter.Close();
             MessageBox.Show("Série sauvegardée");
         }
 
