@@ -23,7 +23,7 @@ namespace MesurePotentiomètre
         int enrValeurs;
         double nbValeurs;
         SerialPort COM;
-        int delay = 500; //Ici vous pouvez recopier la valeur de délai que vous avez introduit dans votre code Arduino
+        int delay = 50; //Ici vous pouvez recopier la valeur de délai que vous avez introduit dans votre code Arduino
         double nbMesuresParSecondes; //Cette variable nous permet de garder une trace de l'instant auquel la mesure a été faite
 
         public Form3()

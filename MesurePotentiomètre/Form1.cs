@@ -72,7 +72,6 @@ namespace MesurePotentiomètre
                 yValues.Add(value);
                 ligne = monStreamReader.ReadLine();
                 col++;
-                MessageBox.Show("Tests");
             }
 
             monStreamReader.Close();
